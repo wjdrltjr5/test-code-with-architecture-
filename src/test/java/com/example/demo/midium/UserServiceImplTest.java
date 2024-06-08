@@ -6,8 +6,7 @@ import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserCreate;
 import com.example.demo.user.domain.UserStatus;
 import com.example.demo.user.domain.UserUpdate;
-import com.example.demo.user.infrastructure.UserEntity;
-import com.example.demo.user.service.UserService;
+import com.example.demo.user.service.UserServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -30,9 +29,9 @@ import static org.mockito.ArgumentMatchers.any;
         @Sql(value = "/sql/user-service-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
         @Sql(value = "/sql/delete-all-data.sql" , executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 })
-class UserServiceTest {
+class UserServiceImplTest {
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userServiceImpl;
 
     @MockBean
     private JavaMailSender javaMailSender;
@@ -43,7 +42,7 @@ class UserServiceTest {
         // given
         String email = "wjdrltjr5@naver.com";
         // when
-        User result = userService.getByEmail(email);
+        User result = userServiceImpl.getByEmail(email);
         // then
         assertThat(result.getNickname()).isEqualTo("wjdrltjr");
 
@@ -57,7 +56,7 @@ class UserServiceTest {
         // when
 
         // then
-        assertThatThrownBy(() -> userService.getByEmail(email)).isInstanceOf(ResourceNotFoundException.class);
+        assertThatThrownBy(() -> userServiceImpl.getByEmail(email)).isInstanceOf(ResourceNotFoundException.class);
 
     }
 
@@ -67,7 +66,7 @@ class UserServiceTest {
         // given
 
         // when
-        User result = userService.getById(1);
+        User result = userServiceImpl.getById(1);
         // then
         assertThat(result.getNickname()).isEqualTo("wjdrltjr");
     }
@@ -77,7 +76,7 @@ class UserServiceTest {
         // given
         // when
         // then
-        assertThatThrownBy(() -> userService.getById(2)).isInstanceOf(ResourceNotFoundException.class);
+        assertThatThrownBy(() -> userServiceImpl.getById(2)).isInstanceOf(ResourceNotFoundException.class);
     }
 
     @Test
@@ -91,7 +90,7 @@ class UserServiceTest {
         BDDMockito.doNothing().when(javaMailSender).send(any(SimpleMailMessage.class));
         
         // when
-        User result = userService.create(dto);
+        User result = userServiceImpl.create(dto);
         // then
         assertThat(result.getId()).isNotNull();
         assertThat(result.getStatus()).isEqualTo(UserStatus.PENDING);
@@ -105,9 +104,9 @@ class UserServiceTest {
         UserUpdate dto = UserUpdate.builder().address("Seoul")
                 .nickname("awdawd").build();
         // when
-        User result = userService.update(1,dto);
+        User result = userServiceImpl.update(1,dto);
         // then
-        User userEntity = userService.getById(1);
+        User userEntity = userServiceImpl.getById(1);
         assertThat(userEntity.getNickname()).isEqualTo(dto.getNickname());
         assertThat(userEntity.getAddress()).isEqualTo(dto.getAddress());
     }
@@ -116,9 +115,9 @@ class UserServiceTest {
     void user를_로그인_시키면_마지막_로그인_시간이_변경된다() {
         // given
         // when
-        userService.login(1);
+        userServiceImpl.login(1);
         // then
-        User userEntity = userService.getById(1);
+        User userEntity = userServiceImpl.getById(1);
         assertThat(userEntity.getLastLoginAt()).isGreaterThan(0);
     }
 
@@ -126,9 +125,9 @@ class UserServiceTest {
     void PENDING_상태의_사용자는_인증_코드로_ACTIVE_시킬_수_있다() {
         // given
         // when
-        userService.verifyEmail(2,"aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
+        userServiceImpl.verifyEmail(2,"aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
         // then
-        User userEntity = userService.getById(2);
+        User userEntity = userServiceImpl.getById(2);
         assertThat(userEntity.getStatus()).isEqualTo(UserStatus.ACTIVE);
     }
 
@@ -137,7 +136,7 @@ class UserServiceTest {
         // given
         // when
         // then
-        assertThatThrownBy(() -> userService.verifyEmail(2,"aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaccaa"))
+        assertThatThrownBy(() -> userServiceImpl.verifyEmail(2,"aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaccaa"))
                 .isInstanceOf(CertificationCodeNotMatchedException.class);
     }
 }

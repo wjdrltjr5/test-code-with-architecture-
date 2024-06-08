@@ -4,16 +4,17 @@ import com.example.demo.common.service.port.ClockHolder;
 import com.example.demo.common.service.port.UuidHolder;
 import com.example.demo.post.controller.PostController;
 import com.example.demo.post.controller.PostCreateController;
+import com.example.demo.post.controller.port.PostService;
+import com.example.demo.post.service.PostServiceImpl;
 import com.example.demo.post.service.port.PostRepository;
-
+import com.example.demo.user.controller.MyInfoController;
 import com.example.demo.user.controller.UserController;
 import com.example.demo.user.controller.UserCreateController;
 import com.example.demo.user.service.CertificationService;
-
+import com.example.demo.user.service.UserServiceImpl;
 import com.example.demo.user.service.port.MailSender;
 import com.example.demo.user.service.port.UserRepository;
 import lombok.Builder;
-/*
 
 public class TestContainer {
 
@@ -62,4 +63,4 @@ public class TestContainer {
             .build();
     }
 }
-*/
+
