@@ -3,12 +3,8 @@ package com.example.demo.user.domain;
 import com.example.demo.common.domain.exception.CertificationCodeNotMatchedException;
 import com.example.demo.common.service.port.ClockHolder;
 import com.example.demo.common.service.port.UuidHolder;
-import com.example.demo.user.infrastructure.UserEntity;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.Clock;
-import java.util.UUID;
 
 @Builder
 @Getter
@@ -51,7 +47,7 @@ public class User {
                 .address(address)
                 .certificationCode(certificationCode)
                 .status(status)
-                .lastLoginAt(clockHolder.mills())
+                .lastLoginAt(clockHolder.millis())
                 .build();
     }
 

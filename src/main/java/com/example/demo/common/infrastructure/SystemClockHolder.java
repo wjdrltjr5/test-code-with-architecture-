@@ -8,7 +8,7 @@ import java.time.Clock;
 @Component
 public class SystemClockHolder implements ClockHolder {
     @Override
-    public long mills() {
+    public long millis() {
         return Clock.systemUTC().millis();
     }
 }

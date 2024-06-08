@@ -11,7 +11,7 @@ public class TestClockHolder implements ClockHolder {
     }
 
     @Override
-    public long mills() {
+    public long millis() {
         return mills;
     }
 }
